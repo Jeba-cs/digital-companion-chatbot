@@ -1,0 +1,15 @@
+# Create this file exactly as shown
+streamlit==1.28.0
+google-genai
+sentence-transformers
+PyPDF2
+faster-whisper
+moviepy
+imageio-ffmpeg
+youtube-transcript-api
+yt-dlp
+streamlit-authenticator
+numpy
+faiss-cpu
+pyyaml
+pillow
