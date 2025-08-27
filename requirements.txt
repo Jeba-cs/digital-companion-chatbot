@@ -1,15 +1,13 @@
-# Create this file exactly as shown
 streamlit==1.28.0
-google-genai
-sentence-transformers
-PyPDF2
-faster-whisper
-moviepy
-imageio-ffmpeg
-youtube-transcript-api
-yt-dlp
-streamlit-authenticator
-numpy
-faiss-cpu
-pyyaml
-pillow
+google-genai==1.32.0
+sentence-transformers==5.1.0
+faiss-cpu==1.12.0
+faster-whisper==1.2.0
+moviepy==2.2.1
+imageio-ffmpeg==0.6.0
+PyPDF2==3.0.1
+yt-dlp==2025.8.22
+streamlit-authenticator==0.4.2
+youtube-transcript-api==1.2.2
+pyyaml==6.0.2
+numpy==1.26.4
