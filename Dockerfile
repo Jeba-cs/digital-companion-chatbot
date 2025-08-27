@@ -1,9 +1,8 @@
-# Dockerfile
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install only the necessary system dependencies
+# Install only necessary system dependencies
 RUN apt-get update \
  && apt-get install -y \
     gcc \
@@ -20,17 +19,16 @@ RUN python -m pip install --upgrade pip \
  && python -m pip install --no-cache-dir moviepy imageio-ffmpeg pillow
 
 # Sanity check for MoviePy import
-RUN python - <<EOF
-import moviepy.editor
-print("MoviePy import OK")
-EOF
+RUN python -c "import moviepy.editor; print('MoviePy import OK')"
 
 # Copy the rest of the app
 COPY . .
 
-# Streamlit config
+# Create streamlit directory (but don't copy secrets.toml - Render handles this)
 RUN mkdir -p /app/.streamlit
-COPY .streamlit/secrets.toml /app/.streamlit/secrets.toml
+
+# NOTE: secrets.toml will be provided by Render's environment variables or secret files
+# No need to COPY it here - it causes build failures since it's not in the repo
 
 EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
