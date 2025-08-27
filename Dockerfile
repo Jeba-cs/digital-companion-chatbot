@@ -1,42 +1,38 @@
-# Use official Python runtime as base image
+# Dockerfile
 FROM python:3.9-slim
 
-# Set working directory in container
 WORKDIR /app
 
-# Install system dependencies including FFmpeg for MoviePy
-RUN apt-get update && apt-get install -y \
+# Install only the necessary system dependencies
+RUN apt-get update \
+ && apt-get install -y \
     gcc \
-    g++ \
     curl \
     ffmpeg \
     libsm6 \
     libxext6 \
-    libfontconfig1 \
-    libxrender1 \
-    libglib2.0-0 \
-    libgl1 \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first (for better Docker layer caching)
+# Copy and install Python dependencies
 COPY requirements.txt .
+RUN python -m pip install --upgrade pip \
+ && python -m pip install --no-cache-dir -r requirements.txt \
+ && python -m pip install --no-cache-dir moviepy imageio-ffmpeg pillow
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Sanity check for MoviePy import
+RUN python - <<EOF
+import moviepy.editor
+print("MoviePy import OK")
+EOF
 
-# Copy all application files
+# Copy the rest of the app
 COPY . .
 
-# Create .streamlit directory and copy config
+# Streamlit config
 RUN mkdir -p /app/.streamlit
-COPY .streamlit/config.toml /app/.streamlit/config.toml
+COPY .streamlit/secrets.toml /app/.streamlit/secrets.toml
 
-# Expose the port Streamlit runs on
 EXPOSE 8501
-
-# Health check to ensure the app is running
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
-# Command to run the application
 CMD ["streamlit", "run", "DIGITAL_COMPANION_APP.py", "--server.port=8501", "--server.address=0.0.0.0"]
