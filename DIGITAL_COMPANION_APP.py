@@ -1439,7 +1439,6 @@ def main():
                     }
                     if signup_user(form_data):
                         st.success("Account created! Please log in.")
-                        st.experimental_rerun()
                 except ValueError as e:
                     st.error(str(e))
         else:
