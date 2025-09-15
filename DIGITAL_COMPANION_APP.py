@@ -54,9 +54,12 @@ except ImportError:
 
 try:
     from moviepy.editor import VideoFileClip
+    MOVIEPY_AVAILABLE = True
 except ImportError:
-    st.error("MoviePy not found. Install with: pip install moviepy")
-    st.stop()
+    VideoFileClip = None
+    MOVIEPY_AVAILABLE = False
+    st.warning("MoviePy not available - video processing disabled")
+
 
 try:
     from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound, TranscriptsDisabled
